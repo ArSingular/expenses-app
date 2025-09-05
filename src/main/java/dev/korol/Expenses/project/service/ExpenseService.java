@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 public interface ExpenseService {
 
-    ExpenseResponse createExpense(ExpenseRequest request);
-    ExpenseResponse getExpenseById(Long expenseId);
+    ExpenseResponse createExpense(long userId, ExpenseRequest request);
+    ExpenseResponse getExpenseById(long expenseId);
     List<ExpenseResponse> getExpensesByUser(Long userId);
-    ExpenseResponse updateExpense(Long expenseId, ExpenseRequest request);
-    void deleteExpense(Long expenseId);
+    ExpenseResponse updateExpense(long expenseId,long userId, ExpenseRequest request);
+    void deleteExpense(long expenseId, long userId);
     BigDecimal getTotalByUser(Long userId);
 
 }

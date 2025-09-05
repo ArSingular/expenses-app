@@ -10,13 +10,17 @@ import lombok.Setter;
 
 /**
  * @author Korol Artur
- * 30.08.2025
+ * 05.09.2025
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginRequest {
+public class UpdateUserRequest {
+
+    @NotBlank
+    private String username;
 
     @Email
     @NotBlank

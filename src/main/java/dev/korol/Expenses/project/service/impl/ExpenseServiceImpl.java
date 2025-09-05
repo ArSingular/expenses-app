@@ -10,7 +10,9 @@ import dev.korol.Expenses.project.repository.UserRepository;
 import dev.korol.Expenses.project.service.ExpenseService;
 import dev.korol.Expenses.project.util.mapper.ExpenseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
@@ -31,8 +34,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 
     @Override
-    public ExpenseResponse createExpense(ExpenseRequest request) {
-        long userId = request.getUserId();
+    public ExpenseResponse createExpense(long userId, ExpenseRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id: " + userId + " not found "));
 
@@ -45,7 +47,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public ExpenseResponse getExpenseById(Long expenseId) {
+    public ExpenseResponse getExpenseById(long expenseId) {
         Expense expense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new EntityNotFoundException("Expense with id: " + expenseId + " not found"));
 
@@ -53,6 +55,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ExpenseResponse> getExpensesByUser(Long userId) {
         List<Expense> expenseResponses = expenseRepository.findByUserId(userId);
 
@@ -60,9 +63,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public ExpenseResponse updateExpense(Long expenseId, ExpenseRequest request) {
+    public ExpenseResponse updateExpense(long expenseId,long userId, ExpenseRequest request) {
         Expense existedExpense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new EntityNotFoundException("Expense with id: " + expenseId + " not found "));
+
+        long existedUserId = existedExpense.getUser().getId();
+
+        if (existedUserId != userId) {
+            throw new AccessDeniedException("No access to update this expense");
+        }
 
         expenseMapper.updateExpenseFromExpenseRequest(request, existedExpense);
         Expense updated = expenseRepository.save(existedExpense);
@@ -71,11 +80,21 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public void deleteExpense(Long expenseId) {
+    public void deleteExpense(long expenseId, long userId) {
+        Expense existedExpense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new EntityNotFoundException("Expense with id: " + expenseId + " not found "));
+
+        long existedUserId = existedExpense.getUser().getId();
+
+        if (existedUserId != userId) {
+            throw new AccessDeniedException("No access to delete this expense");
+        }
+
         expenseRepository.deleteById(expenseId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BigDecimal getTotalByUser(Long userId) {
         return expenseRepository.getTotalByUser(userId);
     }

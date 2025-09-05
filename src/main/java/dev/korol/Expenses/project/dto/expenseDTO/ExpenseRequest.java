@@ -33,6 +33,4 @@ public class ExpenseRequest {
     @NotNull
     private LocalDate date;
 
-    private long userId;
-
 }

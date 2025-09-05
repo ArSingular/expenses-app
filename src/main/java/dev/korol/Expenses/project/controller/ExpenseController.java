@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -24,24 +25,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/expenses")
 @RequiredArgsConstructor
+@Validated
 public class ExpenseController {
 
     private final ExpenseService expenseService;
     private final UserService userService;
 
-    @PostMapping()
-    public ResponseEntity<ExpenseResponse> createExpense(@Valid @RequestBody ExpenseRequest expenseRequest){
-        ExpenseResponse expenseResponse = expenseService.createExpense(expenseRequest);
+    @PostMapping
+    public ResponseEntity<ExpenseResponse> createExpense(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ExpenseRequest request
+    ) {
+        String email = userDetails.getUsername();
+        UserResponse user = userService.getUserByEmail(email);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(expenseResponse);
+        ExpenseResponse created = expenseService.createExpense(user.getUserId(), request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
     public ResponseEntity<List<ExpenseResponse>> getExpenses(@AuthenticationPrincipal UserDetails userDetails){
         String email = userDetails.getUsername();
-
         UserResponse userResponse = userService.getUserByEmail(email);
-        List<ExpenseResponse> expenseResponses = expenseService.getExpensesByUser(userResponse.getId());
+
+        List<ExpenseResponse> expenseResponses = expenseService.getExpensesByUser(userResponse.getUserId());
 
         return ResponseEntity.ok(expenseResponses);
     }
@@ -52,23 +59,39 @@ public class ExpenseController {
     }
 
     @PutMapping("/{expenseId}")
-    public ResponseEntity<ExpenseResponse> updateExpense(@PathVariable Long expenseId,@Valid @RequestBody ExpenseRequest expenseRequest){
+    public ResponseEntity<ExpenseResponse> updateExpense(
+            @PathVariable Long expenseId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ExpenseRequest request
+    ) {
+        String email = userDetails.getUsername();
+        UserResponse user = userService.getUserByEmail(email);
 
-        ExpenseResponse expenseResponse = expenseService.updateExpense(expenseId, expenseRequest);
-
-        return ResponseEntity.ok(expenseResponse);
+        ExpenseResponse updated = expenseService.updateExpense(expenseId, user.getUserId(), request);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{expenseId}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long expenseId){
-        expenseService.deleteExpense(expenseId);
+    public ResponseEntity<Void> deleteExpense(
+            @PathVariable Long expenseId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String email = userDetails.getUsername();
+        UserResponse user = userService.getUserByEmail(email);
 
+        expenseService.deleteExpense(expenseId, user.getUserId());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/total")
-    public ResponseEntity<BigDecimal> getTotalExpensesAmount(@RequestParam Long userId){
-        return ResponseEntity.ok(expenseService.getTotalByUser(userId));
+    public ResponseEntity<BigDecimal> getTotal(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String email = userDetails.getUsername();
+        UserResponse user = userService.getUserByEmail(email);
+
+        BigDecimal total = expenseService.getTotalByUser(user.getUserId());
+        return ResponseEntity.ok(total);
     }
 
 }

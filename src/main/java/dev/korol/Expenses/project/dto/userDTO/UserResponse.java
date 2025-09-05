@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserResponse {
 
-    private long id;
+    private long userId;
     private String username;
     private String email;
     private Role role;

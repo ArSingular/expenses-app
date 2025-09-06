@@ -2,6 +2,7 @@ package dev.korol.Expenses.project.service.impl;
 
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseRequest;
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseResponse;
+import dev.korol.Expenses.project.dto.expenseDTO.ExpenseUpdateRequest;
 import dev.korol.Expenses.project.entity.Expense;
 import dev.korol.Expenses.project.entity.User;
 import dev.korol.Expenses.project.exception.EntityNotFoundException;
@@ -63,7 +64,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public ExpenseResponse updateExpense(long expenseId,long userId, ExpenseRequest request) {
+    public ExpenseResponse updateExpense(long expenseId,long userId, ExpenseUpdateRequest request) {
         Expense existedExpense = expenseRepository.findById(expenseId)
                 .orElseThrow(() -> new EntityNotFoundException("Expense with id: " + expenseId + " not found "));
 
@@ -73,7 +74,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             throw new AccessDeniedException("No access to update this expense");
         }
 
-        expenseMapper.updateExpenseFromExpenseRequest(request, existedExpense);
+        expenseMapper.updateExpenseFromExpenseUpdateRequest(request, existedExpense);
         Expense updated = expenseRepository.save(existedExpense);
 
         return expenseMapper.toExpenseResponse(updated);

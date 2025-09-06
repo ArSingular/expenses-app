@@ -5,10 +5,7 @@ import dev.korol.Expenses.project.dto.userDTO.UserLoginRequest;
 import dev.korol.Expenses.project.dto.userDTO.UserRegisterRequest;
 import dev.korol.Expenses.project.dto.userDTO.UserResponse;
 import dev.korol.Expenses.project.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValueMappingStrategy;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,6 +21,8 @@ public interface UserMapper {
     User toUser(UserLoginRequest userLoginRequest);
     @Mapping(source = "id", target = "userId")
     UserResponse toUserResponse(User user);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromUpdateRequest(UpdateUserRequest updateUserRequest, @MappingTarget User user);
 
 }

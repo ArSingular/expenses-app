@@ -2,11 +2,9 @@ package dev.korol.Expenses.project.util.mapper;
 
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseRequest;
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseResponse;
+import dev.korol.Expenses.project.dto.expenseDTO.ExpenseUpdateRequest;
 import dev.korol.Expenses.project.entity.Expense;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValueMappingStrategy;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,5 +24,6 @@ public interface ExpenseMapper {
     ExpenseRequest toExpenseRequest(Expense expense);
     Expense toExpense(ExpenseRequest expenseRequest);
     Expense toExpense(ExpenseResponse expenseResponse);
-    void updateExpenseFromExpenseRequest(ExpenseRequest expenseRequest, @MappingTarget Expense expense);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateExpenseFromExpenseUpdateRequest(ExpenseUpdateRequest expenseUpdateRequest, @MappingTarget Expense expense);
 }

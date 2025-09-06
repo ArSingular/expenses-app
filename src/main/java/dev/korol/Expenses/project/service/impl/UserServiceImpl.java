@@ -8,6 +8,7 @@ import dev.korol.Expenses.project.repository.UserRepository;
 import dev.korol.Expenses.project.service.UserService;
 import dev.korol.Expenses.project.util.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse getUserByEmail(String email) {
@@ -29,16 +31,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse updateUser(Long userId, UpdateUserRequest updateUserRequest) {
-        User existingUser = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id: " + userId + " not found"));
-
-        if (!existingUser.getEmail().equalsIgnoreCase(updateUserRequest.getEmail())
-                && userRepository.existsByEmail(updateUserRequest.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
+        
+        if (updateUserRequest.getEmail() != null && !updateUserRequest.getEmail().isEmpty()) {
+            if (!updateUserRequest.getEmail().equals(user.getEmail())) {
+                userRepository.findByEmail(updateUserRequest.getEmail())
+                        .ifPresent(existingUser -> {
+                            throw new IllegalArgumentException("Email already in use.");
+                        });
+            }
         }
 
-        userMapper.updateUserFromUpdateRequest(updateUserRequest, existingUser);
-        User updatedUser = userRepository.save(existingUser);
+        userMapper.updateUserFromUpdateRequest(updateUserRequest, user);
+
+        if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
+            String encodedPassword = passwordEncoder.encode(updateUserRequest.getPassword());
+            user.setPassword(encodedPassword);
+        }
+
+        User updatedUser = userRepository.save(user);
 
         return userMapper.toUserResponse(updatedUser);
     }

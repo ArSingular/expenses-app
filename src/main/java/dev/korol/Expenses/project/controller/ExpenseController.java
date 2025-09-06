@@ -2,6 +2,7 @@ package dev.korol.Expenses.project.controller;
 
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseRequest;
 import dev.korol.Expenses.project.dto.expenseDTO.ExpenseResponse;
+import dev.korol.Expenses.project.dto.expenseDTO.ExpenseUpdateRequest;
 import dev.korol.Expenses.project.dto.userDTO.UserResponse;
 import dev.korol.Expenses.project.service.ExpenseService;
 import dev.korol.Expenses.project.service.UserService;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequestMapping("/api/expenses")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin(origins = "http://localhost:4200")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -62,7 +64,7 @@ public class ExpenseController {
     public ResponseEntity<ExpenseResponse> updateExpense(
             @PathVariable Long expenseId,
             @AuthenticationPrincipal UserDetails userDetails,
-            @Valid @RequestBody ExpenseRequest request
+            @Valid @RequestBody ExpenseUpdateRequest request
     ) {
         String email = userDetails.getUsername();
         UserResponse user = userService.getUserByEmail(email);

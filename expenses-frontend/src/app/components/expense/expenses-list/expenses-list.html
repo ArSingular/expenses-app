@@ -1,0 +1,34 @@
+<div class="container mt-5">
+  <h3 class="mb-3">Ваші витарти</h3>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <table *ngIf="!loading && expenses.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Опис</th>
+        <th>Сума</th>
+        <th>Дата</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of expenses">
+        <td>{{ e.id }}</td>
+        <td>{{ e.description }}</td>
+        <td>{{ e.amount | currency:'UAH' }}</td>
+        <td>{{ e.date | date:'dd.MM.yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && expenses.length === 0" class="alert alert-info">
+    Витрат поки що немає.
+  </div>
+</div>

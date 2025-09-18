@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent{
 
-  loginRequest: LoginRequest = { email: '', password: '' };
+  loginRequest: LoginRequest = new LoginRequest();
   errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -24,8 +24,11 @@ export class LoginComponent{
         this.router.navigate(['/expenses']); 
       },
       error: (err) => {
-        this.errorMessage = 'Невірна пошта або пароль';
-        console.error('Login error:', err);
+        if (err.error && err.error.message) {
+          this.errorMessage = err.error.message; 
+        } else {
+          this.errorMessage = 'Сталася невідома помилка';
+        }
       }
     });
   }

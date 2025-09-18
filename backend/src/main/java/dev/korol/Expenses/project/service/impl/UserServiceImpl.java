@@ -3,6 +3,7 @@ package dev.korol.Expenses.project.service.impl;
 import dev.korol.Expenses.project.dto.userDTO.UpdateUserRequest;
 import dev.korol.Expenses.project.dto.userDTO.UserResponse;
 import dev.korol.Expenses.project.entity.User;
+import dev.korol.Expenses.project.exception.EmailAlreadyExistException;
 import dev.korol.Expenses.project.exception.EntityNotFoundException;
 import dev.korol.Expenses.project.repository.UserRepository;
 import dev.korol.Expenses.project.service.UserService;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
             if (!updateUserRequest.getEmail().equals(user.getEmail())) {
                 userRepository.findByEmail(updateUserRequest.getEmail())
                         .ifPresent(existingUser -> {
-                            throw new IllegalArgumentException("Email already in use.");
+                            throw new EmailAlreadyExistException("Ой, а така пошта вже існує, оновити не вийде");
                         });
             }
         }

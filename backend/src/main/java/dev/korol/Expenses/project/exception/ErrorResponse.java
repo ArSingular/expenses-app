@@ -19,10 +19,9 @@ import java.util.Map;
 @NoArgsConstructor
 public class ErrorResponse {
 
-    private LocalDateTime timestamp;
     private int status;
     private String message;
     private String path;
-    private Map<String, String> errors;
+    private LocalDateTime timestamp;
 
 }

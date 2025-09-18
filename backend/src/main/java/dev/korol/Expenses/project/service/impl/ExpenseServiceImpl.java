@@ -71,7 +71,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         long existedUserId = existedExpense.getUser().getId();
 
         if (existedUserId != userId) {
-            throw new AccessDeniedException("No access to update this expense");
+            throw new AccessDeniedException("Немає доступу щоб оновити витрати");
         }
 
         expenseMapper.updateExpenseFromExpenseUpdateRequest(request, existedExpense);
@@ -88,7 +88,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         long existedUserId = existedExpense.getUser().getId();
 
         if (existedUserId != userId) {
-            throw new AccessDeniedException("No access to delete this expense");
+            throw new AccessDeniedException("Немає доступу щоб видалити витрати");
         }
 
         expenseRepository.deleteById(expenseId);

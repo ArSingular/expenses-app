@@ -1,0 +1,37 @@
+
+<div class="container mt-4">
+  @if (user) {
+    <h3 class="mb-3 text-center">Мій акаунт</h3>
+
+    @if (!editMode) {
+      <div class="mb-3">
+        <p><strong>Ім’я користувача:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <button class="btn btn-primary" (click)="toggleEdit()">Редагувати</button>
+      </div>
+    } @else {
+      <div>
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Ім’я користувача</label>
+            <input type="text" [(ngModel)]="user.username" name="username" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" [(ngModel)]="user.email" name="email" class="form-control">
+          </div>
+
+          <button class="btn btn-success" type="button" (click)="saveChanges()">Зберегти</button>
+          <button class="btn btn-secondary ms-2" type="button" (click)="toggleEdit()">Скасувати</button>
+        </form>
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="alert alert-success mt-3">{{ successMessage }}</div>
+    } @else if (errorMessage) {
+      <div class="alert alert-danger mt-3">{{ errorMessage }}</div>
+    }
+  }
+</div>

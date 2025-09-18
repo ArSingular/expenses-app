@@ -1,0 +1,20 @@
+import { Component } from '@angular/core';
+import { AuthService } from '../../../services/auth/auth-service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-header-component',
+  standalone: false,
+  templateUrl: './header-component.html',
+  styleUrl: './header-component.css'
+})
+export class HeaderComponent {
+
+  constructor(protected authService: AuthService, private router: Router){}
+
+  logout(){
+    this.authService.logount();
+    this.router.navigate(['/login']);
+  }
+
+}

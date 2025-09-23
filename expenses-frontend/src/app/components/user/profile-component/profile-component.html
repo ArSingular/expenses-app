@@ -1,37 +1,112 @@
-
 <div class="container mt-4">
-  @if (user) {
-    <h3 class="mb-3 text-center">Мій акаунт</h3>
+  @if (user$ | async; as user) {
+    <h3 class="text-center mb-4">Мій профіль</h3>
 
-    @if (!editMode) {
-      <div class="mb-3">
-        <p><strong>Ім’я користувача:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <button class="btn btn-primary" (click)="toggleEdit()">Редагувати</button>
-      </div>
-    } @else {
-      <div>
-        <form>
+    <div class="card shadow-sm p-3 mb-4">
+      <h5 class="mb-3">Профіль</h5>
+
+      @if (!editProfileMode) {
+        <div>
+          <div class="mb-2">
+            <p><strong>Ім’я користувача:</strong> {{ user.username }}</p>
+          </div>
+          <button class="btn btn-outline-primary" (click)="toggleEditProfile()">Змінити Ім’я</button>
+        </div>
+      } @else {
+        <form (ngSubmit)="saveProfile()">
           <div class="mb-3">
             <label class="form-label">Ім’я користувача</label>
-            <input type="text" [(ngModel)]="user.username" name="username" class="form-control">
+            <input
+              type="text"
+              [(ngModel)]="profileUpdate.username"
+              name="username"
+              class="form-control"
+              required
+            />
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" [(ngModel)]="user.email" name="email" class="form-control">
-          </div>
-
-          <button class="btn btn-success" type="button" (click)="saveChanges()">Зберегти</button>
-          <button class="btn btn-secondary ms-2" type="button" (click)="toggleEdit()">Скасувати</button>
+          <button
+            class="btn btn-success"
+            type="button"
+            (click)="saveProfile()"
+            [disabled]="!((profileUpdate.username ?? '').trim())"
+          >
+            Зберегти
+          </button>
+          <button class="btn btn-secondary ms-2" type="button" (click)="toggleEditProfile()">Скасувати</button>
         </form>
-      </div>
-    }
+      }
+    </div>
 
-    @if (successMessage) {
-      <div class="alert alert-success mt-3">{{ successMessage }}</div>
-    } @else if (errorMessage) {
-      <div class="alert alert-danger mt-3">{{ errorMessage }}</div>
-    }
+    <div class="card shadow-sm p-3 mb-4">
+      <h5 class="mb-3">Змінити email</h5>
+
+      @if (!editEmailMode) {
+        <div>
+          <div class="mb-2">
+            <p><strong>Поточний email:</strong> {{ user.email }}</p>
+          </div>
+          <button class="btn btn-outline-primary" (click)="toggleEditEmail()">Змінити email</button>
+        </div>
+      } @else {
+        <form (ngSubmit)="startEmailChange()">
+          <div class="mb-3">
+            <label class="form-label">Новий email</label>
+            <input
+              type="email"
+              [(ngModel)]="newEmail"
+              name="newEmail"
+              class="form-control"
+              required
+            />
+            <div class="form-text">
+              На нову адресу прийде 6-значний код для підтвердження.
+            </div>
+          </div>
+
+          <button class="btn btn-success" type="button" (click)="startEmailChange()">Надіслати код</button>
+          <button class="btn btn-secondary ms-2" type="button" (click)="toggleEditEmail()">Скасувати</button>
+        </form>
+      }
+    </div>
+
+<div class="card shadow-sm p-3">
+  <h5 class="mb-3">Змінити пароль</h5>
+  <form (ngSubmit)="changePassword()">
+    <div class="mb-3">
+      <label class="form-label">Старий пароль</label>
+      <input type="password" [(ngModel)]="oldPassword" name="oldPassword" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Новий пароль</label>
+      <input type="password" [(ngModel)]="newPassword" name="newPassword" class="form-control" />
+
+      <ul class="mt-2 small list-unstyled">
+        <li [class.text-success]="hasMinLength(newPassword)" [class.text-danger]="!hasMinLength(newPassword)">
+          ✔ Мінімум 6 символів
+        </li>
+        <li [class.text-success]="hasNumber(newPassword)" [class.text-danger]="!hasNumber(newPassword)">
+          ✔ Містить цифру
+        </li>
+        <li [class.text-success]="hasLetter(newPassword)" [class.text-danger]="!hasLetter(newPassword)">
+          ✔ Містить букву
+        </li>
+        <li [class.text-success]="hasSpecial(newPassword)" [class.text-danger]="!hasSpecial(newPassword)">
+          ✔ Містить спецсимвол
+        </li>
+      </ul>
+    </div>
+
+    <button
+      class="btn btn-success"
+      type="button"
+      (click)="changePassword()"
+      [disabled]="!isPasswordValid(newPassword)"
+    >
+      Оновити пароль
+    </button>
+  </form>
+</div>
+
   }
 </div>

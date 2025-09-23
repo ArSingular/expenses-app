@@ -23,6 +23,7 @@ public interface UserMapper {
     UserResponse toUserResponse(User user);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "password", ignore = true)
     void updateUserFromUpdateRequest(UpdateUserRequest updateUserRequest, @MappingTarget User user);
 
 }

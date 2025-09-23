@@ -1,15 +1,17 @@
 package dev.korol.Expenses.project.controller;
 
-import dev.korol.Expenses.project.dto.userDTO.UpdateUserRequest;
-import dev.korol.Expenses.project.dto.userDTO.UserResponse;
+import dev.korol.Expenses.project.dto.userDTO.*;
 import dev.korol.Expenses.project.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author Korol Artur
@@ -38,6 +40,36 @@ public class UserController {
         UserResponse userResponse = userService.getUserByEmail(email);
 
         return ResponseEntity.ok(userService.updateUser(userResponse.getUserId(), updateUserRequest));
+    }
+
+    @PatchMapping("/me/email")
+    public ResponseEntity<Map<String, String>> changeEmail(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ChangeEmailRequest changeEmailRequest){
+        String email = userDetails.getUsername();
+        UserResponse userResponse = userService.getUserByEmail(email);
+
+        String msg = userService.changeEmail(userResponse.getUserId(), changeEmailRequest.getNewEmail());
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Map.of("message", msg));
+    }
+
+    @PostMapping("/me/email/confirm")
+    public ResponseEntity<ChangeEmailResponse> confirmChangeEmail(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ConfirmEmailOtpRequest confirmEmailOtpRequest){
+        String email = userDetails.getUsername();
+        UserResponse userResponse = userService.getUserByEmail(email);
+
+        return ResponseEntity.ok(userService.confirmEmailChangeOtp(userResponse.getUserId(), confirmEmailOtpRequest));
+    }
+
+
+
+    @PutMapping("/me/password")
+    public ResponseEntity<Map<String, String>> changePassword(@AuthenticationPrincipal UserDetails userDetails, @Valid @RequestBody UpdatePasswordRequest updatePasswordRequest){
+        String email = userDetails.getUsername();
+        UserResponse userResponse = userService.getUserByEmail(email);
+
+        String message = userService.changePassword(userResponse.getUserId(), updatePasswordRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", message));
     }
 
 }

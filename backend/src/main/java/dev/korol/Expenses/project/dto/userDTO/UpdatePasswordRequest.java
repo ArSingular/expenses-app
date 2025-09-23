@@ -1,6 +1,5 @@
 package dev.korol.Expenses.project.dto.userDTO;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -11,20 +10,16 @@ import lombok.Setter;
 
 /**
  * @author Korol Artur
- * 30.08.2025
+ * 20.09.2025
  */
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRegisterRequest {
+public class UpdatePasswordRequest {
 
-    @NotBlank
-    private String username;
-
-    @Email
-    private String email;
+    private String oldPassword;
 
     @NotBlank
     @Size(min = 6, message = "Пароль має містити мінімум 6 символів")
@@ -32,6 +27,6 @@ public class UserRegisterRequest {
             regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\\-=]).{6,}$",
             message = "Пароль повинен містити літери, цифри та спеціальний символ"
     )
-    private String password;
+    private String newPassword;
 
 }

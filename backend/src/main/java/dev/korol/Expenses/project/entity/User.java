@@ -3,6 +3,7 @@ package dev.korol.Expenses.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +44,12 @@ public class User {
     private String verificationToken;
 
     private String resetPasswordToken;
+
+    @Column(length = 255)
+    private String pendingEmail;
+
+    @Column
+    private Instant changeEmailTokenExpiry;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenses = new ArrayList<>();

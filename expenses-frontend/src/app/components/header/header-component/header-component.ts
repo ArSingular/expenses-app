@@ -13,7 +13,7 @@ export class HeaderComponent {
   constructor(protected authService: AuthService, private router: Router){}
 
   logout(){
-    this.authService.logount();
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 

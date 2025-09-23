@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth/auth-service';
 import { StorageService } from '../../../services/auth/storage-service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login-component',
@@ -25,9 +26,9 @@ export class LoginComponent{
       },
       error: (err) => {
         if (err.error && err.error.message) {
-          this.errorMessage = err.error.message; 
+          Swal.fire('Помилка 🚨', err.error?.message, 'error');
         } else {
-          this.errorMessage = 'Сталася невідома помилка';
+          Swal.fire('Помилка 🚨', "Сталася невідома помилка", 'error');
         }
       }
     });

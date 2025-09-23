@@ -37,7 +37,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final UserMapper userMapper;
     private final EmailService emailService;
 
     @Override

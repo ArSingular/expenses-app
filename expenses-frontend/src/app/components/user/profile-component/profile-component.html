@@ -3,19 +3,19 @@
     <h3 class="text-center mb-4">Мій профіль</h3>
 
     <div class="card shadow-sm p-3 mb-4">
-      <h5 class="mb-3">Профіль</h5>
+      <h5 class="mb-3">Змінити Ім’я</h5>
 
       @if (!editProfileMode) {
         <div>
           <div class="mb-2">
-            <p><strong>Ім’я користувача:</strong> {{ user.username }}</p>
+            <p><strong>Поточне Ім’я:</strong> {{ user.username }}</p>
           </div>
           <button class="btn btn-outline-primary" (click)="toggleEditProfile()">Змінити Ім’я</button>
         </div>
       } @else {
         <form (ngSubmit)="saveProfile()">
           <div class="mb-3">
-            <label class="form-label">Ім’я користувача</label>
+            <label class="form-label">Нове Ім’я</label>
             <input
               type="text"
               [(ngModel)]="profileUpdate.username"

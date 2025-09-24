@@ -13,9 +13,6 @@ import dev.korol.Expenses.project.service.EmailService;
 import dev.korol.Expenses.project.service.UserService;
 import dev.korol.Expenses.project.util.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,8 +32,6 @@ import java.time.temporal.ChronoUnit;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private final UserMapper userMapper;
     private final EmailService emailService;

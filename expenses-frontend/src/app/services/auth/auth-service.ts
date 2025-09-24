@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { LoginRequest } from '../../models/auth/login-request.model';
 import { RegisterRequest } from '../../models/auth/register-request.model';
+import { UserService } from '../user/user-service';
 
 const AUTH_API = 'http://localhost:8080/api/auth/';
 const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
@@ -12,7 +13,7 @@ export class AuthService {
 
   private readonly tokenKey = 'JWT_TOKEN';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private userService: UserService) {}
 
   login(loginRequest: LoginRequest): Observable<boolean> {
     return this.http.post<{ token: string }>(AUTH_API + 'login', loginRequest, httpOptions).pipe(
@@ -51,6 +52,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.userService.refreshUser();
     localStorage.removeItem(this.tokenKey);
   }
 

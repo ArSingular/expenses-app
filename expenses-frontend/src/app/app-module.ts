@@ -12,6 +12,7 @@ import { RegisterComponent } from './components/auth/register-component/register
 import { HeaderComponent } from './components/header/header-component/header-component';
 import { ProfileComponent } from './components/user/profile-component/profile-component';
 import { VerificationComponent } from './components/auth/verification-component/verification-component';
+import { ExpenseFormModal } from './components/expense/expense-form-modal/expense-form-modal';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { VerificationComponent } from './components/auth/verification-component/
     RegisterComponent,
     HeaderComponent,
     ProfileComponent,
-    VerificationComponent
+    VerificationComponent,
+    ExpenseFormModal
   ],
   imports: [
     BrowserModule,

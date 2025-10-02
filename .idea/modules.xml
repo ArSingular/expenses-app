@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/backend/Expenses-project.iml" filepath="$PROJECT_DIR$/backend/Expenses-project.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/merged.iml" filepath="$PROJECT_DIR$/.idea/merged.iml" />
     </modules>
   </component>

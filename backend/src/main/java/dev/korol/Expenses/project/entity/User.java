@@ -45,13 +45,12 @@ public class User {
 
     private String resetPasswordToken;
 
-    @Column(length = 255)
     private String pendingEmail;
 
     @Column
     private Instant changeEmailTokenExpiry;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Expense> expenses = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
 }

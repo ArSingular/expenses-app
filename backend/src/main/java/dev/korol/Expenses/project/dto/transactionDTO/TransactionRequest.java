@@ -1,6 +1,6 @@
-package dev.korol.Expenses.project.dto.expenseDTO;
+package dev.korol.Expenses.project.dto.transactionDTO;
 
-import dev.korol.Expenses.project.entity.Category;
+import dev.korol.Expenses.project.entity.TxType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +11,18 @@ import java.time.LocalDate;
 
 /**
  * @author Korol Artur
- * 06.09.2025
+ * 29.09.2025
  */
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenseUpdateRequest {
+public class TransactionRequest {
 
+    private TxType type;
     private BigDecimal amount;
-    private Category category;
+    private long categoryId;
     private String description;
     private LocalDate date;
 

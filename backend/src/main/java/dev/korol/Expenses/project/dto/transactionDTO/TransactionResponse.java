@@ -1,6 +1,7 @@
-package dev.korol.Expenses.project.dto.expenseDTO;
+package dev.korol.Expenses.project.dto.transactionDTO;
 
-import dev.korol.Expenses.project.entity.Category;
+import dev.korol.Expenses.project.entity.Kind;
+import dev.korol.Expenses.project.entity.TxType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,20 +12,22 @@ import java.time.LocalDate;
 
 /**
  * @author Korol Artur
- * 30.08.2025
+ * 29.09.2025
  */
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExpenseResponse {
+public class TransactionResponse {
 
     private long id;
+    private TxType type;
     private BigDecimal amount;
-    private Category category;
     private String description;
     private LocalDate date;
-    private long userId;
+    private long categoryId;
+    private String categoryName;
+    private Kind categoryKind;
 
 }

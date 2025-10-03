@@ -1,0 +1,111 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="mb-0">Доходи</h3>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+      <input type="date" class="form-control" style="width: 170px"
+             [ngModel]="from" (ngModelChange)="onFrom($event)" />
+      <input type="date" class="form-control" style="width: 170px"
+             [ngModel]="to" (ngModelChange)="onTo($event)" />
+      <input type="month" class="form-control" style="width: 170px"
+             [ngModel]="month" (ngModelChange)="onMonth($event)" />
+      <input type="text" class="form-control" style="width: 220px" placeholder="Пошук..."
+             [ngModel]="search" (ngModelChange)="onSearch($event)" />
+      <button class="btn btn-success" (click)="openCreate()">+ Додати</button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary"></div>
+    </div>
+  } @else if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  } @else {
+
+    <div class="card mb-3">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>Знайдено: <b>{{ view.length }}</b></div>
+        <div>Сума: <b class="text-success">+{{ total | currency:' UAH ' }}</b></div>
+      </div>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded mb-3">
+      <table class="table custom-table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th (click)="onSort('date')" style="cursor:pointer">
+              Дата 
+              @if (sortKey==='date') {
+                <span class="ms-1">{{ sortDir==='asc'?'▲':'▼' }}</span>
+              }
+            </th>
+            <th (click)="onSort('category')" style="cursor:pointer">
+              Категорія 
+              @if (sortKey==='category') {
+                <span class="ms-1">{{ sortDir==='asc'?'▲':'▼' }}</span>
+              }
+            </th>
+            <th (click)="onSort('description')" style="cursor:pointer">
+              Опис 
+              @if (sortKey==='description') {
+                <span class="ms-1">{{ sortDir==='asc'?'▲':'▼' }}</span>
+              }
+            </th>
+            <th class="text-end" (click)="onSort('amount')" style="cursor:pointer">
+              Сума 
+              @if (sortKey==='amount') {
+                <span class="ms-1">{{ sortDir==='asc'?'▲':'▼' }}</span>
+              }
+            </th>
+            <th class="text-center">Дії</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of view; track t.id) {
+            <tr>
+              <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
+              <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
+              <td>{{ t.description }}</td>
+              <td class="text-end fw-bold text-success">+{{ t.amount | currency:'UAH ':'symbol':'1.2-2' }}</td>
+              <td class="text-center">
+                <button class="btn btn-link p-0 me-2" (click)="openEdit(t)" title="Редагувати">✏️
+                  <span class="bi bi-pencil-square fs-5 text-primary"></span>
+                </button>
+                <button class="btn btn-link p-0" (click)="confirmDelete(t)" title="Видалити">🗑️
+                  <span class="bi bi-trash fs-5 text-danger"></span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">Розподіл за категоріями</div>
+          <div class="card-body">
+            <app-pie-chart-component [data]="pieData"></app-pie-chart-component>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-header">Динаміка за місяцями</div>
+          <div class="card-body">
+            <app-bar-chart-component [data]="seriesData" [xFmt]="formatMonthLabel"></app-bar-chart-component>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-transaction-form-modal
+    [visible]="modalVisible"
+    [transaction]="editing"
+    [presetType]="'INCOME'"
+    (close)="onCloseModal()"
+    (save)="save($event)">
+  </app-transaction-form-modal>
+</div>

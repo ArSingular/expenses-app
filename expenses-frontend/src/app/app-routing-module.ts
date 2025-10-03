@@ -7,6 +7,7 @@ import { guestGuard } from './util/guest-guard';
 import { ProfileComponent } from './components/user/profile-component/profile-component';
 import { VerificationComponent } from './components/auth/verification-component/verification-component';
 import { Overview } from './components/transaction/overview/overview';
+import { IncomeComponent } from './components/transaction/income-component/income-component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'me', component: ProfileComponent, canActivate: [authGuard] },
   { path: 'verify', component: VerificationComponent },
   { path: 'overview', component: Overview, canActivate: [authGuard] },
+  { path: 'incomes', component: IncomeComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/overview', pathMatch: 'full' }
 
 ];

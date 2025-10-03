@@ -1,0 +1,84 @@
+@if (visible) {
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+
+        <div class="modal-header bg-primary text-white rounded-top-4">
+          <h5 class="modal-title">
+            @if (transaction) {
+              ✏️ Редагувати транзакцію
+            } @else {
+              ➕ Додати транзакцію
+            }
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="close.emit()"></button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="modal-body">
+            <div class="row g-3">
+
+              <div class="col-12 col-md-4">
+                <label class="form-label">Тип</label>
+                <select class="form-select" formControlName="type">
+                  <option value="EXPENSE">Витрата</option>
+                  <option value="INCOME">Дохід</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-md-8">
+                <label class="form-label">Категорія</label>
+                <select class="form-select" formControlName="categoryId">
+                  <option [ngValue]="null" disabled>Оберіть...</option>
+                  @for (c of indented; track c.id) {
+                    <option [ngValue]="c.id">{{ c.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="col-12 col-md-4">
+                <label class="form-label">Сума</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  class="form-control"
+                  formControlName="amount"
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div class="col-12 col-md-4">
+                <label class="form-label">Дата</label>
+                <input type="date" class="form-control" formControlName="date" />
+              </div>
+
+              <div class="col-12 col-md-4">
+                <label class="form-label">Опис</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="description"
+                  placeholder="Необов’язково"
+                  autofocus
+                />
+              </div>
+
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="close.emit()">
+              ❌ Скасувати
+            </button>
+
+            <button type="submit" class="btn btn-success rounded-pill px-4" [disabled]="form.invalid">
+              @if (transaction) { 💾 Зберегти } @else { ✅ Створити }
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+}

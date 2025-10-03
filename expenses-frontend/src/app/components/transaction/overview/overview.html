@@ -1,0 +1,97 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Огляд</h3>
+    <div class="d-flex gap-2">
+      <button class="btn btn-success btn-sm" (click)="openCreate('EXPENSE')">+ Витрата</button>
+      <button class="btn btn-success btn-sm" (click)="openCreate('INCOME')">+ Дохід</button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-5"><div class="spinner-border text-primary"></div></div>
+  } @else if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  } @else {
+    <div class="row g-3">
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm rounded">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>📉 Витрати</span>
+            <span class="fw-semibold text-danger">−{{ totalExpenses | currency:' UAH ' }}</span>
+          </div>
+          <div class="card-body p-0">
+            @if (expenses.length) {
+              <div class="table-responsive">
+                <table class="table custom-table align-middle mb-0">
+                  <thead><tr><th>Дата</th><th>Категорія</th><th>Опис</th><th class="text-end">Сума</th><th class="text-center">Дії</th></tr></thead>
+                  <tbody>
+                    @for (t of expenses; track t.id) {
+                      <tr>
+                        <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
+                        <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
+                        <td>{{ t.description }}</td>
+                        <td class="text-end fw-bold text-danger">-{{ t.amount | currency:' UAH ':'symbol':'1.2-2' }}</td>
+                        <td class="text-center">
+                          <button class="btn btn-sm btn-primary btn-action me-2" (click)="openEdit(t)" title="Редагувати">✏️
+                            <span class="bi bi-pencil-square fs-5 text-primary"></span>
+                          </button>
+                          <button class="btn btn-sm btn-danger btn-action" (click)="confirmDelete(t)" title="Видалити">🗑️
+                            <span class="bi bi-trash fs-5 text-danger"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else { <div class="p-3 text-muted">Записів немає</div> }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm rounded">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>📈 Доходи</span>
+            <span class="fw-semibold text-success">+{{ totalIncomes | currency:' UAH ' }}</span>
+          </div>
+          <div class="card-body p-0">
+            @if (incomes.length) {
+              <div class="table-responsive">
+                <table class="table custom-table align-middle mb-0">
+                  <thead><tr><th>Дата</th><th>Категорія</th><th>Опис</th><th class="text-end">Сума</th><th class="text-center">Дії</th></tr></thead>
+                  <tbody>
+                    @for (t of incomes; track t.id) {
+                      <tr>
+                        <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
+                        <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
+                        <td>{{ t.description }}</td>
+                        <td class="text-end fw-bold text-success">+{{ t.amount | currency:' UAH ':'symbol':'1.2-2' }}</td>
+                        <td class="text-center">
+                          <button class="btn btn-sm btn-primary btn-action me-2" (click)="openEdit(t)" title="Редагувати">✏️
+                            <span class="bi bi-pencil-square fs-5 text-primary"></span>
+                          </button>
+                          <button class="btn btn-sm btn-danger btn-action" (click)="confirmDelete(t)" title="Видалити">🗑️
+                            <span class="bi bi-trash fs-5 text-danger"></span>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else { <div class="p-3 text-muted">Записів немає</div> }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <app-transaction-form-modal
+    [visible]="modalVisible"
+    [transaction]="editing"
+    [presetType]="presetType"
+    (close)="onCloseModal()"
+    (save)="save($event)">
+  </app-transaction-form-modal>
+</div>

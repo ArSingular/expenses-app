@@ -13,6 +13,11 @@ import { ProfileComponent } from './components/user/profile-component/profile-co
 import { VerificationComponent } from './components/auth/verification-component/verification-component';
 import { Overview } from './components/transaction/overview/overview';
 import { TransactionFormModal } from './components/transaction/transaction-form-modal/transaction-form-modal';
+import { IncomeComponent } from './components/transaction/income-component/income-component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PieChartComponent } from './components/chart/pie-chart-component/pie-chart-component';
+import { BarChartComponent } from './components/chart/bar-chart-component/bar-chart-component';
 
 @NgModule({
   declarations: [
@@ -23,13 +28,18 @@ import { TransactionFormModal } from './components/transaction/transaction-form-
     ProfileComponent,
     VerificationComponent,
     Overview,
-    TransactionFormModal
+    TransactionFormModal,
+    IncomeComponent,
+    PieChartComponent,
+    BarChartComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxChartsModule,
+    BrowserAnimationsModule,
     HttpClientModule
   ],
   providers: [

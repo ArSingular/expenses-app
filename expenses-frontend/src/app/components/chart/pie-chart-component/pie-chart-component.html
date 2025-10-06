@@ -1,11 +1,14 @@
-<ngx-charts-pie-chart
-  [results]="data"
-  [legend]="true"
-  [labels]="true"
-  [doughnut]="false"
-  [gradient]="false"
-  [explodeSlices]="false"
-  [scheme]="'forest'"
-  [tooltipDisabled]="false">
-</ngx-charts-pie-chart>
-  
+@if (data.length) {
+  <ngx-charts-pie-chart legendTitle="Категорія"
+    [results]="data"
+    [legend]="true"
+    [labels]="true"
+    [doughnut]="false"
+    [gradient]="false"
+    [explodeSlices]="false"
+    [scheme]="colorScheme"
+    [tooltipDisabled]="false">
+  </ngx-charts-pie-chart>
+} @else {
+  <div class="text-center text-muted py-4">Немає даних</div>
+}

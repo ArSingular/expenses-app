@@ -1,14 +1,18 @@
-<ngx-charts-bar-vertical
-  [results]="data"
-  [legend]="false"
-  [xAxis]="true"
-  [yAxis]="true"
-  [showDataLabel]="true"
-  [roundDomains]="true"
-  [scheme]="'forest'"
-  [xAxisLabel]="'Місяць'"
-  [yAxisLabel]="'Сума'"
-  [xAxisTickFormatting]="xFmt">
-</ngx-charts-bar-vertical>
+@if (data.length) {
+  <ngx-charts-bar-vertical
+    [results]="data"
+    [legend]="false"
+    [xAxis]="true"
+    [yAxis]="true"
+    [showDataLabel]="true"
+    [roundDomains]="true"
+    [scheme]="colorScheme"
+    [xAxisLabel]="'Місяць'"
+    [yAxisLabel]="'Сума'"
+    [xAxisTickFormatting]="xFmt">
+  </ngx-charts-bar-vertical>
+} @else {
+  <div class="text-center text-muted py-4">Немає даних</div>
+}
 
 

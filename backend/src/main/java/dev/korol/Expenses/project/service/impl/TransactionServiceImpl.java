@@ -55,6 +55,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse updateTransaction(long transactionId, long userId, TransactionRequest transactionRequest) {
         Transaction existedTransaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new EntityNotFoundException("Transaction with id: " + transactionId + " not found "));
@@ -63,6 +64,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         if(existedUserId != userId){
             throw new AccessDeniedException("Немає доступу щоб оновити транзакцію");
+        }
+
+        if(transactionRequest.getCategoryId() != 0){
+            Category category = categoryRepository.findById(transactionRequest.getCategoryId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category with id: " + transactionRequest.getCategoryId() + " not found "));
+
+            existedTransaction.setCategory(category);
         }
 
         transactionMapper.updateTransactionFromTransactionRequest(transactionRequest, existedTransaction);

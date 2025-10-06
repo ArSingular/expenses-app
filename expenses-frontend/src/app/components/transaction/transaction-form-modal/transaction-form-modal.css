@@ -1,33 +1,24 @@
+.modal { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
 
-.modal {
-  background: rgba(0, 0, 0, 0.5); 
-  backdrop-filter: blur(4px);
-}
-
-.modal-content {
-  animation: slideDown 0.3s ease-out;
-}
-
+.modal-content { animation: slideDown 0.3s ease-out; }
 @keyframes slideDown {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
 
-.form-control, .form-select {
-  border-radius: 10px;
-}
+.form-control, .form-select { border-radius: 10px; }
 
-.btn {
-  font-size: 1rem;
-  transition: all 0.2s ease-in-out;
-}
+.btn { font-size: 1rem; transition: all 0.2s ease-in-out; }
+.btn:hover { transform: scale(1.05); }
 
-.btn:hover {
-  transform: scale(1.05);
+.cascade-wrap { align-items: stretch; }
+.cascade-col {
+  flex: 1 1 0;
+  min-width: 180px;
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: #fff;
 }
+.list-group-item { cursor: pointer; }

@@ -5,11 +5,7 @@
 
         <div class="modal-header bg-primary text-white rounded-top-4">
           <h5 class="modal-title">
-            @if (transaction) {
-              ✏️ Редагувати транзакцію
-            } @else {
-              ➕ Додати транзакцію
-            }
+            @if (transaction) { ✏️ Редагувати транзакцію } @else { ➕ Додати транзакцію }
           </h5>
           <button type="button" class="btn-close btn-close-white" (click)="close.emit()"></button>
         </div>
@@ -28,24 +24,75 @@
 
               <div class="col-12 col-md-8">
                 <label class="form-label">Категорія</label>
-                <select class="form-select" formControlName="categoryId">
-                  <option [ngValue]="null" disabled>Оберіть...</option>
-                  @for (c of indented; track c.id) {
-                    <option [ngValue]="c.id">{{ c.label }}</option>
-                  }
-                </select>
+
+                @if (!categoryPicked) {
+                  <input class="form-control mb-2" type="text" placeholder="Пошук серед категорій..."
+                         [formControl]="searchCtrl">
+
+                  <div class="d-flex gap-2 cascade-wrap">
+                    <div class="cascade-col">
+                      <div class="list-group list-group-flush">
+                        @for (r of filteredRoots; track r.id) {
+                          <button type="button"
+                                  class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
+                                  [class.active]="hoverRoot?.id === r.id"
+                                  (mouseenter)="onHoverRoot(r)"
+                                  (click)="onPick(r)"
+                                  [attr.data-node]="'root-' + r.id">
+                            <span>{{ r.name }}</span>
+                            <span class="text-muted" *ngIf="r.children.length">›</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="cascade-col" *ngIf="hoverRoot && hoverRoot.children.length">
+                      <div class="list-group list-group-flush">
+                        @for (c of hoverRoot.children; track c.id) {
+                          <button type="button"
+                                  class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
+                                  [class.active]="hoverChild?.id === c.id"
+                                  (mouseenter)="onHoverChild(c)"
+                                  (click)="onPick(c)"
+                                  [attr.data-node]="'child-' + c.id">
+                            <span>{{ c.name }}</span>
+                            <span class="text-muted" *ngIf="c.children.length">›</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="cascade-col" *ngIf="hoverChild && hoverChild.children.length">
+                      <div class="list-group list-group-flush">
+                        @for (n of hoverChild.children; track n.id) {
+                          <button type="button"
+                                  class="list-group-item list-group-item-action"
+                                  [class.active]="form.value.categoryId === n.id"
+                                  (click)="onPick(n)"
+                                  [attr.data-node]="'leaf-' + n.id">
+                            {{ n.name }}
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="d-flex align-items-center justify-content-between p-2 border rounded">
+                    <div>
+                      <div class="small text-muted">Обрана категорія</div>
+                      <div class="fw-semibold">{{ pickedLabel || ('ID: ' + form.value.categoryId) }}</div>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCategory()">Змінити</button>
+                  </div>
+                }
+
+                <small class="text-muted d-block mt-2">Обрано ID: {{ form.value.categoryId || '—' }}</small>
               </div>
 
               <div class="col-12 col-md-4">
                 <label class="form-label">Сума</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  class="form-control"
-                  formControlName="amount"
-                  placeholder="0.00"
-                />
+                <input type="number" step="0.01" min="0.01" class="form-control"
+                       formControlName="amount" placeholder="0.00" />
               </div>
 
               <div class="col-12 col-md-4">
@@ -55,23 +102,15 @@
 
               <div class="col-12 col-md-4">
                 <label class="form-label">Опис</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="description"
-                  placeholder="Необов’язково"
-                  autofocus
-                />
+                <input type="text" class="form-control"
+                       formControlName="description" placeholder="Необов’язково" autofocus />
               </div>
 
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="close.emit()">
-              ❌ Скасувати
-            </button>
-
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="close.emit()">❌ Скасувати</button>
             <button type="submit" class="btn btn-success rounded-pill px-4" [disabled]="form.invalid">
               @if (transaction) { 💾 Зберегти } @else { ✅ Створити }
             </button>

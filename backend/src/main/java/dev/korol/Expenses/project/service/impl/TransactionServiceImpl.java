@@ -31,6 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<TransactionResponse> findAllByUserId(long userId) {
         return transactionRepository.findAllByUserId(userId).stream().map(transactionMapper::toTransactionResponse).toList();
     }

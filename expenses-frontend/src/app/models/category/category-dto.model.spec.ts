@@ -1,4 +1,4 @@
-import { CategoryDTO } from './category-dtomodel';
+import { CategoryDTO } from './category-dto.model';
 
 describe('CategoryDTO', () => {
   it('should create an instance', () => {

@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h3 class="mb-0">Доходи</h3>
+    <h3 class="mb-0">Витрати</h3>
     <div class="d-flex gap-2 align-items-center flex-wrap">
       <input type="date" class="form-control" style="width: 170px"
              [ngModel]="from" (ngModelChange)="onFrom($event)" />
@@ -25,7 +25,7 @@
     <div class="card mb-3">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>Знайдено: <b>{{ view.length }}</b></div>
-        <div>Сума: <b class="text-success">+{{ total | currency:' UAH ' }}</b></div>
+        <div>Сума: <b class="fw-semibold text-danger">-{{ total | currency:' UAH ' }}</b></div>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
               <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
               <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
               <td>{{ t.description }}</td>
-              <td class="text-end fw-bold text-success">+{{ t.amount | currency:'UAH ':'symbol':'1.2-2' }}</td>
+              <td class="text-end fw-bold text-danger">-{{ t.amount | currency:'UAH ':'symbol':'1.2-2' }}</td>
               <td class="text-center">
                 <button class="btn btn-sm btn-primary btn-action me-2" (click)="openEdit(t)" title="Редагувати">✏️
                   <span class="bi bi-pencil-square fs-5 text-primary"></span>
@@ -85,8 +85,8 @@
       <div class="col-12 col-lg-6">
         <div class="card shadow-sm h-100">
           <div class="card-header">Розподіл за категоріями</div>
-          <div class="card-body chart-card-body">
-            <app-pie-chart-component style="min-height: 1000vh" [data]="pieData"></app-pie-chart-component>
+          <div class="card-body">
+            <app-pie-chart-component [data]="pieData"></app-pie-chart-component>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
   <app-transaction-form-modal
     [visible]="modalVisible"
     [transaction]="editing"
-    [presetType]="'INCOME'"
+    [presetType]="'EXPENSE'"
     (close)="onCloseModal()"
     (save)="save($event)">
   </app-transaction-form-modal>

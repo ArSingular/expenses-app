@@ -8,6 +8,7 @@ import { ProfileComponent } from './components/user/profile-component/profile-co
 import { VerificationComponent } from './components/auth/verification-component/verification-component';
 import { Overview } from './components/transaction/overview/overview';
 import { IncomeComponent } from './components/transaction/income-component/income-component';
+import { ExpenseComponent } from './components/transaction/expense-component/expense-component';
 
 
 const routes: Routes = [
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'verify', component: VerificationComponent },
   { path: 'overview', component: Overview, canActivate: [authGuard] },
   { path: 'incomes', component: IncomeComponent, canActivate: [authGuard] },
+  { path: 'expenses', component: ExpenseComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/overview', pathMatch: 'full' }
 
 ];

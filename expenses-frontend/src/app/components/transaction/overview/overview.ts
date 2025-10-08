@@ -3,6 +3,7 @@ import { TransactionResponse, TxType } from '../../../models/transaction/transac
 import Swal from 'sweetalert2';
 import { TransactionService } from '../../../services/transaction/transaction-service';
 import { TransactionRequest } from '../../../models/transaction/transaction-request.model';
+import { CATEGORY_STYLE_BY_NAME } from '../../../util/category-style.map';
 
 @Component({
   selector: 'app-overview',
@@ -44,7 +45,6 @@ all: TransactionResponse[] = [];
     this.incomes  = this.all.filter(x => x.type === 'INCOME');
   }
 
-  // модалка
   openCreate(type: TxType) {
     this.editing = null;
     this.presetType = type;
@@ -101,6 +101,11 @@ all: TransactionResponse[] = [];
         error: err => Swal.fire('Помилка', err?.error?.message || 'Не вдалося видалити', 'error')
       });
     });
+  }
+
+  getCategoryStyle(name: string) {
+    const key = (name || '').toLowerCase();
+    return CATEGORY_STYLE_BY_NAME[key] || { color: '#495057', bg: '#dee2e6', icon: '🏷️' };
   }
 
   get totalExpenses(): number { return (this.expenses || []).reduce((s, x) => s + (Number(x?.amount) || 0), 0); }

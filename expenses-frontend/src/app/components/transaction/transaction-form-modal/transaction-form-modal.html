@@ -80,13 +80,13 @@
                   <div class="d-flex align-items-center justify-content-between p-2 border rounded">
                     <div>
                       <div class="small text-muted">Обрана категорія</div>
-                      <div class="fw-semibold">{{ pickedLabel || ('ID: ' + form.value.categoryId) }}</div>
+                      <div class="fw-semibold">{{ pickedLabel }}</div>  <!-- || ('ID: ' + form.value.categoryId)-->
                     </div>
                     <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCategory()">Змінити</button>
                   </div>
                 }
 
-                <small class="text-muted d-block mt-2">Обрано ID: {{ form.value.categoryId || '—' }}</small>
+                <!-- <small class="text-muted d-block mt-2">Обрано ID: {{ form.value.categoryId || '—' }}</small> -->
               </div>
 
               <div class="col-12 col-md-4">

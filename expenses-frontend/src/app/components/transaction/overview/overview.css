@@ -50,3 +50,4 @@
 .btn-action:focus { box-shadow: none; }
 .custom-table thead th { font-weight: 600; }
 .category-badge { font-weight: 600; letter-spacing: 0.2px; }
+.badge { border: 1px solid rgba(0,0,0,0.05); font-weight: 600; }

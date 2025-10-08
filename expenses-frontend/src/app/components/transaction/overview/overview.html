@@ -28,7 +28,10 @@
                     @for (t of expenses; track t.id) {
                       <tr>
                         <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
-                        <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
+                        <td><span class="badge px-3 py-2 d-inline-flex align-items-center gap-1"
+                          [ngStyle]="{ color: getCategoryStyle(t.categoryName!).color, background: getCategoryStyle(t.categoryName!).bg }">
+                        <span class="me-1">{{ getCategoryStyle(t.categoryName!).icon }}</span>    {{ t.categoryName }} </span>
+                        </td>
                         <td>{{ t.description }}</td>
                         <td class="text-end fw-bold text-danger">-{{ t.amount | currency:' UAH ':'symbol':'1.2-2' }}</td>
                         <td class="text-center">
@@ -64,7 +67,10 @@
                     @for (t of incomes; track t.id) {
                       <tr>
                         <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
-                        <td><span class="badge text-bg-secondary">{{ t.categoryName }}</span></td>
+                        <td><span class="badge px-3 py-2 d-inline-flex align-items-center gap-1"
+                          [ngStyle]="{ color: getCategoryStyle(t.categoryName!).color, background: getCategoryStyle(t.categoryName!).bg }">
+                        <span class="me-1">{{ getCategoryStyle(t.categoryName!).icon }}</span>    {{ t.categoryName }} </span>
+                        </td>
                         <td>{{ t.description }}</td>
                         <td class="text-end fw-bold text-success">+{{ t.amount | currency:' UAH ':'symbol':'1.2-2' }}</td>
                         <td class="text-center">

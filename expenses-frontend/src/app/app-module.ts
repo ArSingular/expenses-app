@@ -18,6 +18,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PieChartComponent } from './components/chart/pie-chart-component/pie-chart-component';
 import { BarChartComponent } from './components/chart/bar-chart-component/bar-chart-component';
+import { ExpenseComponent } from './components/transaction/expense-component/expense-component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { BarChartComponent } from './components/chart/bar-chart-component/bar-ch
     TransactionFormModal,
     IncomeComponent,
     PieChartComponent,
-    BarChartComponent
+    BarChartComponent,
+    ExpenseComponent
   ],
   imports: [
     BrowserModule,

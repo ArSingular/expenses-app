@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-pie-chart-component',
@@ -10,6 +10,7 @@ import { Color, ScaleType } from '@swimlane/ngx-charts';
 export class PieChartComponent {
 
   @Input() data: { name: string; value: number }[] = [];
+
 
   colorScheme: { name: string; selectable: boolean; group: ScaleType; domain: string[] } = {
   name: 'customIncome',

@@ -1,5 +1,6 @@
 .custom-table thead th { font-weight: 600; user-select: none; }
 pre { background: #f8f9fa; border: 1px solid #eee; padding: 8px; border-radius: 6px; }
+.card-body ngx-charts-chart { width: 100%; height: 320px; display: block; }
 .btn-action {
   border-radius: 50%;
   width: 36px;
@@ -7,5 +8,3 @@ pre { background: #f8f9fa; border: 1px solid #eee; padding: 8px; border-radius: 
   padding: 0;
 }
 .btn-action:focus { box-shadow: none; }
-.chart-card-body { min-height: 280px; height: 340px; }
-@media (min-width: 992px) { .chart-card-body { height: 380px; } }

@@ -63,11 +63,6 @@ public class UserServiceImpl implements UserService {
 
         userMapper.updateUserFromUpdateRequest(updateUserRequest, user);
 
-//        if (updateUserRequest.getPassword() != null && !updateUserRequest.getPassword().isEmpty()) {
-//            String encodedPassword = passwordEncoder.encode(updateUserRequest.getPassword());
-//            user.setPassword(encodedPassword);
-//        }
-
         User updatedUser = userRepository.save(user);
 
         return userMapper.toUserResponse(updatedUser);

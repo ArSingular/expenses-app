@@ -26,8 +26,35 @@
                 <label class="form-label">Категорія</label>
 
                 @if (!categoryPicked) {
-                  <input class="form-control mb-2" type="text" placeholder="Пошук серед категорій..."
-                         [formControl]="searchCtrl">
+
+                  <div class="d-flex gap-2 align-items-center mb-2 flex-wrap">
+                    <input class="form-control" style="max-width:260px" type="text"
+                           placeholder="Пошук серед категорій..." [formControl]="searchCtrl">
+                    @if (!createMode) {
+                      <button type="button" class="btn btn-outline-primary btn-sm" (click)="openCreateCategory()">Нова категорія</button>
+                    } @else {
+                      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelCreateCategory()">Скасувати</button>
+                    }
+                  </div>
+
+                  @if (createMode) {
+                    <div class="border rounded p-2 mb-2 bg-light">
+                      <div class="d-flex gap-2 align-items-center">
+                        <input input #catName type="text" class="form-control" placeholder="Назва нової категорії"
+                               [value]="createCatName" (input)="createCatName = catName.value">
+                        <button type="button" class="btn btn-success btn-sm" (click)="submitCreateCategory()">Створити</button>
+                      </div>
+                      <small class="text-muted d-block mt-1">
+                        Батьківська гілка: {{ createParentLabel }}
+                      </small>
+                      @if (createCatTouched && !createCatName.trim()) {
+                        <div class="text-danger small mt-1">Вкажи назву</div>
+                      }
+                      @if (createCatError) {
+                        <div class="text-danger small mt-1">{{ createCatError }}</div>
+                      }
+                    </div>
+                  }
 
                   <div class="d-flex gap-2 cascade-wrap">
                     <div class="cascade-col">
@@ -46,47 +73,50 @@
                       </div>
                     </div>
 
-                    <div class="cascade-col" *ngIf="hoverRoot && hoverRoot.children.length">
-                      <div class="list-group list-group-flush">
-                        @for (c of hoverRoot.children; track c.id) {
-                          <button type="button"
-                                  class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
-                                  [class.active]="hoverChild?.id === c.id"
-                                  (mouseenter)="onHoverChild(c)"
-                                  (click)="onPick(c)"
-                                  [attr.data-node]="'child-' + c.id">
-                            <span>{{ c.name }}</span>
-                            <span class="text-muted" *ngIf="c.children.length">›</span>
-                          </button>
-                        }
+                    @if (hoverRoot && hoverRoot.children.length) {
+                      <div class="cascade-col">
+                        <div class="list-group list-group-flush">
+                          @for (c of hoverRoot.children; track c.id) {
+                            <button type="button"
+                                    class="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
+                                    [class.active]="hoverChild?.id === c.id"
+                                    (mouseenter)="onHoverChild(c)"
+                                    (click)="onPick(c)"
+                                    [attr.data-node]="'child-' + c.id">
+                              <span>{{ c.name }}</span>
+                              <span class="text-muted" *ngIf="c.children.length">›</span>
+                            </button>
+                          }
+                        </div>
                       </div>
-                    </div>
+                    }
 
-                    <div class="cascade-col" *ngIf="hoverChild && hoverChild.children.length">
-                      <div class="list-group list-group-flush">
-                        @for (n of hoverChild.children; track n.id) {
-                          <button type="button"
-                                  class="list-group-item list-group-item-action"
-                                  [class.active]="form.value.categoryId === n.id"
-                                  (click)="onPick(n)"
-                                  [attr.data-node]="'leaf-' + n.id">
-                            {{ n.name }}
-                          </button>
-                        }
+                    @if (hoverChild && hoverChild.children.length) {
+                      <div class="cascade-col">
+                        <div class="list-group list-group-flush">
+                          @for (n of hoverChild.children; track n.id) {
+                            <button type="button"
+                                    class="list-group-item list-group-item-action"
+                                    [class.active]="form.value.categoryId === n.id"
+                                    (click)="onPick(n)"
+                                    [attr.data-node]="'leaf-' + n.id">
+                              {{ n.name }}
+                            </button>
+                          }
+                        </div>
                       </div>
-                    </div>
+                    }
                   </div>
+
                 } @else {
                   <div class="d-flex align-items-center justify-content-between p-2 border rounded">
                     <div>
                       <div class="small text-muted">Обрана категорія</div>
-                      <div class="fw-semibold">{{ pickedLabel }}</div>  <!-- || ('ID: ' + form.value.categoryId)-->
+                      <div class="fw-semibold">{{ pickedLabel }}</div>
                     </div>
                     <button type="button" class="btn btn-outline-primary btn-sm" (click)="editCategory()">Змінити</button>
                   </div>
                 }
-
-                <!-- <small class="text-muted d-block mt-2">Обрано ID: {{ form.value.categoryId || '—' }}</small> -->
               </div>
 
               <div class="col-12 col-md-4">

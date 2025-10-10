@@ -39,4 +39,15 @@ public class Category {
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Category> children = new ArrayList<>();
 
+    @Column(name = "is_system", nullable = false)
+    private boolean system = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+//    private String iconClass;
+//    private String iconColor;
+//    private String iconBgColor;
+
 }

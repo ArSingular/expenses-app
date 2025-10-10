@@ -43,6 +43,13 @@ export class TransactionFormModal implements OnInit, OnChanges{
   categoryPicked = false;
   pickedLabel = '';
 
+  createMode = false;
+  createCatName = '';
+  createCatError = '';
+  createCatTouched = false;
+  createParentId: number | null = null;
+  createParentLabel = 'Корінь';
+
   private idToPath = new Map<number, CategoryTreeDTO[]>();
 
   ngOnInit(): void {
@@ -55,12 +62,7 @@ export class TransactionFormModal implements OnInit, OnChanges{
       .subscribe(q => {
         this.applyFilter(q || '');
         const first = this.firstMatchInRoots(this.filteredRoots, (q || '').toLowerCase());
-        if (first) {
-          setTimeout(() => this.revealPath(first.id, { scroll: true }), 0);
-        } else {
-          this.hoverRoot = null;
-          this.hoverChild = null;
-        }
+        if (first) setTimeout(() => this.revealPath(first.id, { scroll: true }), 0);
       });
   }
 
@@ -104,7 +106,6 @@ export class TransactionFormModal implements OnInit, OnChanges{
       this.tree = this.normalizeTree(raw || []);
       this.rebuildIndex();
       this.applyFilter(this.searchCtrl.value || '');
-
       const cid = this.form.value.categoryId;
       if (typeof cid === 'number') {
         this.revealPath(cid, { scroll: false });
@@ -114,6 +115,73 @@ export class TransactionFormModal implements OnInit, OnChanges{
         this.hoverChild = null;
       }
     });
+  }
+
+  openCreateCategory() {
+    this.createMode = true;
+    this.createCatName = '';
+    this.createCatError = '';
+    this.createCatTouched = false;
+    const fixed = this.hoverChild ?? this.hoverRoot ?? null;
+    this.createParentId = fixed?.id ?? null;
+    this.createParentLabel = fixed ? this.buildPathLabel(fixed.id) : 'Корінь';
+  }
+
+  cancelCreateCategory() {
+    this.createMode = false;
+    this.createCatName = '';
+    this.createCatError = '';
+    this.createCatTouched = false;
+    this.createParentId = null;
+    this.createParentLabel = 'Корінь';
+  }
+
+  submitCreateCategory() {
+    this.createCatTouched = true;
+    this.createCatError = '';
+    const name = (this.createCatName ?? '').trim();
+    if (!name) return;
+
+    const kind = this.form.controls.type.value!;
+    const parentId = this.createParentId;
+
+    this.categoriesApi.createCategory({ name, kind, parentId }).subscribe({
+      next: (created) => {
+        this.loadTree(kind);
+        setTimeout(() => {
+          this.revealPath(created.id!, { scroll: true });
+          this.form.controls.categoryId.setValue(created.id!);
+          this.pickedLabel = this.buildPathLabel(created.id!);
+          this.categoryPicked = true;
+          this.hoverRoot = null; this.hoverChild = null;
+          this.cancelCreateCategory();
+        }, 0);
+      },
+      error: (err) => { this.createCatError = err?.error?.message || 'Не вдалося створити категорію'; }
+    });
+  }
+
+  onHoverRoot(n: CategoryTreeDTO) { this.hoverRoot = n; this.hoverChild = null; }
+  onHoverChild(n: CategoryTreeDTO) { this.hoverChild = n; }
+
+  onPick(n: CategoryTreeDTO) {
+    if (this.createMode) {
+      this.createParentId = n.id;
+      this.createParentLabel = this.buildPathLabel(n.id);
+      return;
+    }
+    this.form.controls.categoryId.setValue(n.id);
+    this.pickedLabel = this.buildPathLabel(n.id);
+    this.categoryPicked = true;
+    this.hoverRoot = null;
+    this.hoverChild = null;
+    setTimeout(() => document.querySelector<HTMLInputElement>('input[formControlName="amount"]')?.focus(), 0);
+  }
+
+  editCategory() {
+    this.categoryPicked = false;
+    const cid = this.form.value.categoryId;
+    if (typeof cid === 'number') this.revealPath(cid, { scroll: true });
   }
 
   private normalizeTree(tree: any[]): CategoryTreeDTO[] {
@@ -166,26 +234,6 @@ export class TransactionFormModal implements OnInit, OnChanges{
     return null;
   }
 
-  onHoverRoot(n: CategoryTreeDTO) { this.hoverRoot = n; this.hoverChild = null; }
-  onHoverChild(n: CategoryTreeDTO) { this.hoverChild = n; }
-
-  onPick(n: CategoryTreeDTO) {
-    this.form.controls.categoryId.setValue(n.id);
-    this.pickedLabel = this.buildPathLabel(n.id);
-    this.categoryPicked = true;
-    this.hoverRoot = null;
-    this.hoverChild = null;
-    setTimeout(() => document.querySelector<HTMLInputElement>('input[formControlName="amount"]')?.focus(), 0);
-  }
-
-  editCategory() {
-    this.categoryPicked = false;
-    const cid = this.form.value.categoryId;
-    if (typeof cid === 'number') {
-      this.revealPath(cid, { scroll: true });
-    }
-  }
-
   private buildPathLabel(id: number): string {
     const path = this.idToPath.get(id) || [];
     return path.map(p => p.name).join(' › ') || `ID: ${id}`;
@@ -194,20 +242,15 @@ export class TransactionFormModal implements OnInit, OnChanges{
   private revealPath(id: number, opts?: { scroll?: boolean }) {
     const path = this.idToPath.get(id);
     if (!path || path.length === 0) { this.hoverRoot = null; this.hoverChild = null; return; }
-
     this.hoverRoot = path[0] || null;
     this.hoverChild = path[1] && this.hoverRoot && this.hoverRoot.id !== path[1].id ? path[1] : null;
-
-    if (opts?.scroll) {
-      setTimeout(() => this.scrollToPath(path), 0);
-    }
+    if (opts?.scroll) setTimeout(() => this.scrollToPath(path), 0);
   }
 
   private scrollToPath(path: CategoryTreeDTO[]) {
     const root = path[0];
     const child = path[1];
     const leaf = path[path.length - 1];
-
     document.querySelector<HTMLButtonElement>(`[data-node="root-${root?.id}"]`)?.scrollIntoView({ block: 'nearest' });
     if (child) document.querySelector<HTMLButtonElement>(`[data-node="child-${child.id}"]`)?.scrollIntoView({ block: 'nearest' });
     document.querySelector<HTMLButtonElement>(`[data-node="leaf-${leaf?.id}"]`)?.scrollIntoView({ block: 'nearest' });

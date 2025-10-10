@@ -8,19 +8,17 @@ import lombok.Setter;
 
 /**
  * @author Korol Artur
- * 29.09.2025
+ * 09.10.2025
  */
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
+public class CreateCategoryRequest {
 
-    private long id;
     private String name;
     private Kind kind;
     private long parentId;
-    private boolean system;
 
 }
